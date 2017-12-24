@@ -1,0 +1,2318 @@
+﻿<usermanual>
+						
+					MENTAL ROTATION for CHILDREN - with training via keyboard presses
+SCRIPT INFO
+
+Script Author: Katja Borchert, Ph.D. (katjab@millisecond.com) for Millisecond Software, LLC
+Date: 02-10-2015
+last updated: 04-06-2017 by K.Borchert (katjab@millisecond.com) for Millisecond Software LLC
+
+Copyright © 04-06-2017 Millisecond Software
+
+BACKGROUND INFO
+
+											*Purpose*
+This script implements a Mental Rotation Test and Training for children as published by:
+
+Wiedenbauer, G. & Jansen-Osmann, P. (2008). Manual training of mental rotation in children.
+Learning and Instruction, 18, 30-41.
+
+This script implements a rotation training that uses the keyboard as opposed to the 
+joystick training implemented by Wiedenbauer & Jansen-Osmann (2008)
+
+
+											  *Task*
+For pre-posttest participants are presented 2 pictures of the same animal:
+on the left, participants see the animal with a 0° rotation (the base stimulus) and
+on the right, participants see a rotated animal (8 different rotation angles:
+~22.5°, ~67.5°, ~112.5°, ~157.5°; clock and counterclockwise). 
+The rotated pic is either derived from the base stimulus or it is derived from the
+mirror image of the base. Participants are asked to press the right Shift key if the two animals are the same
+and the left Shift key if they are different.
+Training Module: Participant are asked to press left and right Shift keys to rotate the comparison stimulus
+into the same position as the base stimulus.
+
+
+DATA FILE INFORMATION: 
+The default data stored in the data files are:
+
+(1) Raw data file: 'MentalRotation_Children_keyboard_raw*.iqdat' (a separate file for each participant)
+
+build:							Inquisit build
+computer.platform:				the platform the script was run on
+date, time, subject, group:		date and time script was run with the current subject/groupnumber 
+blockcode, blocknum:			the name and number of the current block
+trialcode, trialnum: 			the name and number of the currently recorded trial
+									(Note: not all trials that are run might record data) 
+
+/animalnumber:					stores the current animal (1 = bear....24 = turtle, in alphabetical order) being tested
+/direction						stores the current direction being tested: 1 = base looks left; 2 = base looks right
+/oppositedirection:				stores the current opposite direction of the base
+/angle:							stores the current angle being tested (2 = 22.5° clockwise....9 = 157.5° counterclockwise)
+/sameness:						1 = comp is the same; 2 = comp is mirror image (looks in opposite direction)
+
+/pretest1-
+/pretest6:						store the 6 animals assigned to the pretest
+/training1-
+/training12:					store the 12 animals assigned to the training
+/posttest1-
+/posttest12:					store the 12 animals assigned to the posttest
+
+
+
+stimulusitem:					the presented stimuli in order of trial presentation
+response:						the participant's response
+correct:						the correctness of the response (1 = correct; 0 = incorrect)
+latency: 						the response latency (in ms)
+
+Pretest Summary Variables
+/countpretest_same:								counts all pretest Same trials
+/countpretest_different:						counts all pretest Different trials
+/pretestHits_22 -
+/pretestHits_157:								counts all hits for pretest, separately for each angle (averaged over clockwise and counterclockwise rotations)
+/pretestMisses_22-
+/pretestMisses_157:								counts all Misses for pretest, separately for each angle
+/pretestFAs_22-
+/pretestFAs_157:								counts all False Alarms for pretest, separately for each angle
+/pretestCRs_22-
+/pretestCRs_157:								counts all Correct Rejections for pretest, separately for each angle
+
+posttest Summary Variables
+/countposttest_same:							counts all posttest Same trials
+/countposttest_different:						counts all posttest Different trials
+/posttestHits_22 -
+/posttestHits_157:								counts all hits for posttest, separately for each angle
+/posttestMisses_22-
+/posttestMisses_157:							counts all Misses for posttest, separately for each angle
+/posttestFAs_22-
+/posttestFAs_157:								counts all False Alarms for posttest, separately for each angle
+/posttestCRs_22-
+/posttestCRs_157:								counts all Correct Rejections for posttest, separately for each angle
+
+(2) Summary data file: 'MentalRotation_Children_keyboard_summary*.iqdat' (a separate file for each participant)
+
+script.startdate:				date script was run
+script.starttime:				time script was started
+script.subjectid:				subject id number
+script.groupid:					group id number
+script.elapsedtime:				time it took to run script (in ms)
+computer.platform:				the platform the script was run on
+/completed:						0 = script was not completed (prematurely aborted); 1 = script was completed (all conditions run)
+/propHits_pretest:				proportion hits in same trials on the pretest (averaged over all angles)  (hit = correct in same trials) 
+/propFAs_pretest:				proportion False Alarms in different trials on the pretest (FA = incorrect in different trials => pressing 'same' for mirror images)
+/propHits_posttest:				proportion hits in same trials on the posttest (averaged over all angles)
+/propFAs_posttest:				proportion False Alarms in different trials on the posttest
+
+/properror_pretest:				proportion errors on the pretest (averaged over all angles)
+/properror_pretest22:			proportion errors for 22.5° angles in pretest
+/properror_pretest67:			proportion errors for 67.5° angles in pretest
+/properror_pretest112:			proportion errors for 112.5° angles in pretest
+/properror_pretest157:			proportion errors for 157.5° angles in pretest
+
+/properror_posttest:			proportion errors on the posttest (averaged over all angles)
+/properror_posttest22:			proportion errors for 22.5° angles in posttest
+/properror_posttest67:			proportion errors for 67.5° angles in posttest
+/properror_posttest112:			proportion errors for 112.5° angles in posttest
+/properror_posttest157:			proportion errors for 157.5° angles in posttest
+
+/meanRTpretest:					mean latency of hits in pretest averaged over all angles (hit = correct in same trials)
+/meanRTpretest_22:				mean latency of hits for 22.5° angles in pretest (hit = correct in same trials)
+/meanRTpretest_67:				mean latency of hits for 67.5° angles in pretest (hit = correct in same trials)
+/meanRTpretest_112:				mean latency of hits for 112.5° angles in pretest (hit = correct in same trials)
+/meanRTpretest_157:				mean latency of hits for 157.5° angles in pretest (hit = correct in same trials)
+
+/meanRTposttest:				mean latency of hits in posttest averaged over all angles (hit = correct in same trials)
+/meanRTposttest_22:				mean latency of hits for 22.5° angles in posttest (hit = correct in same trials)
+/meanRTposttest_67:				mean latency of hits for 67.5° angles in posttest (hit = correct in same trials)
+/meanRTposttest_112:			mean latency of hits for 112.5° angles in posttest (hit = correct in same trials)
+/meanRTposttest_157:			mean latency of hits for 157.5° angles in posttest (hit = correct in same trials)
+
+/properror_training: 			prop errors during training (across all angles)
+
+EXPERIMENTAL SET-UP
+
+Practice:
+* trials start with the presentation of a fixation cross for 500ms (editable value) followed by
+* 24 trials = 2 animals * 6 rotation angles * 2 presentations (one with same comparison animal, the other with mirror comparison animal)
+Note: the animals presented during practice are not used for any test condition
+* 2 pictures of the same animal presented for each trial: left is the base (0° rotation); on the right is the rotated comparison stimuli
+* 6 rotation angles: 15°, 90°, 165° degrees clockwise and counterclockwise
+(Note: Wiedenbauer & Jansen-Osmann, 2008, don't specify the number of animals nor the practice angles used)
+* half the base animals look to the left, the other to the right
+* half the trials are 'same' trials (the other half present the mirror image as the comparison animal)
+* random sampling without replacement
+* positive and negative feedback is given by smiley/frowny faces
+
+Pretest
+* trials start with the presentation of a fixation cross for 500ms (editable value) followed by
+* 96 trials= 6 animals * 8 angles * 2 presentations (one with same comparison animal, the other with mirror comparison animal)
+* 2 pictures of the same animal presented for each trial: left is the base (0° rotation); on the right is the rotated comparison stimuli
+* 8 rotation angles: ~22.5°, ~67.5°, ~112.5°, ~157.5° (clock and counterclockwise)
+* half the bases look to the left, the other to the right
+* half the trials are 'same' trials (the other half present the mirror image as the comp animal)
+* random sampling without replacement
+* no feedback
+
+Training
+* one demo trial
+* 192 trials = 12 animals (different from pretest) * 8 angles (same as for pretest) * 2 repetitions
+* 2 pictures of the same animal presented for each trial: left is the base (0° rotation); on the right is the rotated comparison stimuli
+* 8 rotation angles: ~22.5°, ~67.5°, ~112.5°, ~157.5° (clock and counterclockwise)
+* participants can rotate the comparison stimuli clock and counterclockwise by keyboard key presses
+(!Note: the rotated pictures presented are the same 8 angles as used for the pre- and posttest;
+Wiedenbauer & Jansen-Osmann, 2008, may have used a wider spectrum of angles for rotation purposes)
+* if comparison stimuli look like the base, participants are asked to press the ENTER key
+* feedback is provided
+
+Posttest
+* trials start with the presentation of a fixation cross for 500ms (editable value) followed by
+* 192 trials= 12 animals * 8 angles * 2 presentations (one with same comparison animal, the other with mirror comparison animal)
+* 2 pictures of the same animal presented for each trial: left is the base (0° rotation); on the right is the rotated comparison stimuli
+* 8 rotation angles: ~22.5°, ~67.5°, ~112.5°, ~157.5° (clock and counterclockwise)
+* half the bases look to the left, the other to the right
+* half the trials are 'same' trials (the other half present the mirror image as the comparison animal)
+* random sampling without replacement
+* no feedback
+* 6 of the animals presented for the posttest are also used during training; the remaining 6 are new
+
+!Note: assignment of 24 animals to pretest, training, posttest
+In this script, the 24 animals are randomly assigned to pretest (6), training (12), posttest (12) by default.
+Posttest and training share 6 animals. The assignment is therefore different for each participant.
+Wiedenbauer & Jansen-Osmann (2008) used the following predetermined assignment
+A. pretest: elephant; fox; alligator; cow; leopard; horse.
+B. rotation training: bear; donkey; dog; pig; tiger; goat; monkey; bunny; cat; mouse; turtle; sea lion.
+C. posttest: bear; donkey; dog; pig; tiger; goat; camel; lion; rhinoceros; deer; sheep; racoon.
+
+To use this predetermined assignment, go to EDITABLE CODE -> Editable Lists -> list.assignanimals
+and follow instructions.
+
+STIMULI
+Stimuli are animals from the 'Snodgrass and Vanderwart 'Like' Objects' introduced by
+
+Rossion, B., & Pourtois, G. (2004). Revisiting Snodgrass and Vanderwart's object set: 
+The role of surface detail in basic-level object recognition. Perception, 33, 217-236. 
+
+The complete stimuli set can be downloaded at:
+http://wiki.cnbc.cmu.edu/Objects
+(Note: original link published in Rossion & Pourtois (2004) does not work as of Feb 2015)
+
+The pictures used in this script were edited and rotated by Millisecond Software in 
+Paint.net. All animals are presented on a black background.
+
+2 Practice Stimuli: fish, frog
+24 Test Stimuli:
+alligator, bear, bunny, camel, cat, cow, deer, dog, donkey, elephant, fox, goat, horse
+leopard, lion, monkey, mouse, pig, racoon, rhino, sealion, sheep, tiger, turtle
+
+INSTRUCTIONS
+The instructions used in this script are not original to Wiedenbauer & Jansen-Osmann (2008)
+Instructions are presented via instruction slides that were prepared in 
+Powerpoint by Millisecond Software (Powerpoint in zip file). 
+Instruction slides can be exchanged under section Editable Code -> Editable Instructions
+
+
+EDITABLE CODE:
+check below for (relatively) easily editable parameters, stimuli, instructions etc. 
+Keep in mind that you can use this script as a template and therefore always "mess" with the entire code to further customize your experiment.
+
+The parameters you can change are:
+
+/fontsize_fixation:						fontsize of the fixation mark in screen height percentages (default: 15%)
+/fixationduration:						presentation duration of the fixation stimulus (default: 500ms)
+
+</usermanual>
+
+
+**************************************************************************************************************
+**************************************************************************************************************
+	EDITABLE PARAMETERS: change editable parameters here
+**************************************************************************************************************
+**************************************************************************************************************
+
+<parameters>
+/fontsize_fixation = 15%
+/fixationduration = 500
+</parameters>
+
+**************************************************************************************************************
+**************************************************************************************************************
+	EDITABLE STIMULI: change editable stimuli here
+**************************************************************************************************************
+**************************************************************************************************************
+
+Note: contains the practice stimuli
+practice stimuli are two animals (only used during practice) with rotation angles
+15°, 90°, 165° (clock- and counterclockwise rotations)
+<item practiceanimals>
+/1 = "fishL_0.jpg"
+/2 = "fishL_15C.jpg"
+/3 = "fishL_90C.jpg"
+/4 = "fishL_165C.jpg"
+/5 = "fishL_165CC.jpg"
+/6 = "fishL_90CC.jpg"
+/7 = "fishL_15CC.jpg"
+/8 = "frogL_0.jpg"
+/9 = "frogL_15C.jpg"
+/10 = "frogL_90C.jpg"
+/11 = "frogL_165C.jpg"
+/12 = "frogL_165CC.jpg"
+/13 = "frogL_90CC.jpg"
+/14 = "frogL_15CC.jpg"
+
+/15 = "fishR_0.jpg"
+/16 = "fishR_15C.jpg"
+/17 = "fishR_90C.jpg"
+/18 = "fishR_165C.jpg"
+/19 = "fishR_165CC.jpg"
+/20 = "fishR_90CC.jpg"
+/21 = "fishR_15CC.jpg"
+/22 = "frogR_0.jpg"
+/23 = "frogR_15C.jpg"
+/24 = "frogR_90C.jpg"
+/25 = "frogR_165C.jpg"
+/26 = "frogR_165CC.jpg"
+/27 = "frogR_90CC.jpg"
+/28 = "frogR_15CC.jpg"
+</item>
+
+
+contains all 432 stimuli for the test/training
+organization: stimuli are organized
+1. by direction in which animal faces: 1-216: left; 217-332: right
+2. by animal: 1-9: alligator; 10-18: bear etc
+3. by angle (rotation clockwise)
+
+<item animals>
+/1 = "alligatorL_0.jpg"
+/2 = "alligatorL_22C.jpg"
+/3 = "alligatorL_67C.jpg"
+/4 = "alligatorL_112C.jpg"
+/5 = "alligatorL_157C.jpg"
+/6 = "alligatorL_157CC.jpg"
+/7 = "alligatorL_112CC.jpg"
+/8 = "alligatorL_67CC.jpg"
+/9 = "alligatorL_22CC.jpg"
+/10 = "bearL_0.jpg"
+/11 = "bearL_22C.jpg"
+/12 = "bearL_67C.jpg"
+/13 = "bearL_112C.jpg"
+/14 = "bearL_157C.jpg"
+/15 = "bearL_157CC.jpg"
+/16 = "bearL_112CC.jpg"
+/17 = "bearL_67CC.jpg"
+/18 = "bearL_22CC.jpg"
+/19 = "bunnyL_0.jpg"
+/20 = "bunnyL_22C.jpg"
+/21 = "bunnyL_67C.jpg"
+/22 = "bunnyL_112C.jpg"
+/23 = "bunnyL_157C.jpg"
+/24 = "bunnyL_157CC.jpg"
+/25 = "bunnyL_112CC.jpg"
+/26 = "bunnyL_67CC.jpg"
+/27 = "bunnyL_22CC.jpg"
+/28 = "camelL_0.jpg"
+/29 = "camelL_22C.jpg"
+/30 = "camelL_67C.jpg"
+/31 = "camelL_112C.jpg"
+/32= "camelL_157C.jpg"
+/33 = "camelL_157CC.jpg"
+/34 = "camelL_112CC.jpg"
+/35 = "camelL_67CC.jpg"
+/36 = "camelL_22CC.jpg"
+/37 = "catL_0.jpg"
+/38 = "catL_22C.jpg"
+/39 = "catL_67C.jpg"
+/40 = "catL_112C.jpg"
+/41 = "catL_157C.jpg"
+/42 = "catL_157CC.jpg"
+/43 = "catL_112CC.jpg"
+/44 = "catL_67CC.jpg"
+/45 = "catL_22CC.jpg"
+/46 = "cowL_0.jpg"
+/47 = "cowL_22C.jpg"
+/48 = "cowL_67C.jpg"
+/49 = "cowL_112C.jpg"
+/50 = "cowL_157C.jpg"
+/51 = "cowL_157CC.jpg"
+/52 = "cowL_112CC.jpg"
+/53 = "cowL_67CC.jpg"
+/54 = "cowL_22CC.jpg"
+/55 = "deerL_0.jpg"
+/56 = "deerL_22C.jpg"
+/57 = "deerL_67C.jpg"
+/58 = "deerL_112C.jpg"
+/59 = "deerL_157C.jpg"
+/60 = "deerL_157CC.jpg"
+/61 = "deerL_112CC.jpg"
+/62 = "deerL_67CC.jpg"
+/63 = "deerL_22CC.jpg"
+/64 = "dogL_0.jpg"
+/65 = "dogL_22C.jpg"
+/66 = "dogL_67C.jpg"
+/67 = "dogL_112C.jpg"
+/68 = "dogL_157C.jpg"
+/69 = "dogL_157CC.jpg"
+/70 = "dogL_112CC.jpg"
+/71 = "dogL_67CC.jpg"
+/72 = "dogL_22CC.jpg"
+/73 = "donkeyL_0.jpg"
+/74 = "donkeyL_22C.jpg"
+/75 = "donkeyL_67C.jpg"
+/76 = "donkeyL_112C.jpg"
+/77 = "donkeyL_157C.jpg"
+/78 = "donkeyL_157CC.jpg"
+/79 = "donkeyL_112CC.jpg"
+/80 = "donkeyL_67CC.jpg"
+/81 = "donkeyL_22CC.jpg"
+/82 = "elephantL_0.jpg"
+/83 = "elephantL_22C.jpg"
+/84 = "elephantL_67C.jpg"
+/85 = "elephantL_112C.jpg"
+/86 = "elephantL_157C.jpg"
+/87 = "elephantL_157CC.jpg"
+/88= "elephantL_112CC.jpg"
+/89 = "elephantL_67CC.jpg"
+/90 = "elephantL_22CC.jpg"
+/91 = "foxL_0.jpg"
+/92 = "foxL_22C.jpg"
+/93 = "foxL_67C.jpg"
+/94 = "foxL_112C.jpg"
+/95 = "foxL_157C.jpg"
+/96 = "foxL_157CC.jpg"
+/97 = "foxL_112CC.jpg"
+/98 = "foxL_67CC.jpg"
+/99 = "foxL_22CC.jpg"
+/100 = "goatL_0.jpg"
+/101 = "goatL_22C.jpg"
+/102 = "goatL_67C.jpg"
+/103 = "goatL_112C.jpg"
+/104 = "goatL_157C.jpg"
+/105 = "goatL_157CC.jpg"
+/106 = "goatL_112CC.jpg"
+/107 = "goatL_67CC.jpg"
+/108 = "goatL_22CC.jpg"
+/109 = "horseL_0.jpg"
+/110 = "horseL_22C.jpg"
+/111 = "horseL_67C.jpg"
+/112 = "horseL_112C.jpg"
+/113 = "horseL_157C.jpg"
+/114 = "horseL_157CC.jpg"
+/115 = "horseL_112CC.jpg"
+/116 = "horseL_67CC.jpg"
+/117 = "horseL_22CC.jpg"
+/118 = "leopardL_0.jpg"
+/119 = "leopardL_22C.jpg"
+/120 = "leopardL_67C.jpg"
+/121 = "leopardL_112C.jpg"
+/122 = "leopardL_157C.jpg"
+/123 = "leopardL_157CC.jpg"
+/124 = "leopardL_112CC.jpg"
+/125 = "leopardL_67CC.jpg"
+/126 = "leopardL_22CC.jpg"
+/127 = "lionL_0.jpg"
+/128 = "lionL_22C.jpg"
+/129 = "lionL_67C.jpg"
+/130 = "lionL_112C.jpg"
+/131 = "lionL_157C.jpg"
+/132 = "lionL_157CC.jpg"
+/133 = "lionL_112CC.jpg"
+/134 = "lionL_67CC.jpg"
+/135 = "lionL_22CC.jpg"
+/136 = "monkeyL_0.jpg"
+/137 = "monkeyL_22C.jpg"
+/138 = "monkeyL_67C.jpg"
+/139 = "monkeyL_112C.jpg"
+/140 = "monkeyL_157C.jpg"
+/141 = "monkeyL_157CC.jpg"
+/142 = "monkeyL_112CC.jpg"
+/143 = "monkeyL_67CC.jpg"
+/144 = "monkeyL_22CC.jpg"
+/145 = "mouseL_0.jpg"
+/146 = "mouseL_22C.jpg"
+/147 = "mouseL_67C.jpg"
+/148 = "mouseL_112C.jpg"
+/149 = "mouseL_157C.jpg"
+/150 = "mouseL_157CC.jpg"
+/151 = "mouseL_112CC.jpg"
+/152 = "mouseL_67CC.jpg"
+/153 = "mouseL_22CC.jpg"
+/154 = "pigL_0.jpg"
+/155 = "pigL_22C.jpg"
+/156 = "pigL_67C.jpg"
+/157 = "pigL_112C.jpg"
+/158 = "pigL_157C.jpg"
+/159 = "pigL_157CC.jpg"
+/160 = "pigL_112CC.jpg"
+/161 = "pigL_67CC.jpg"
+/162 = "pigL_22CC.jpg"
+/163 = "racoonL_0.jpg"
+/164 = "racoonL_22C.jpg"
+/165 = "racoonL_67C.jpg"
+/166 = "racoonL_112C.jpg"
+/167 = "racoonL_157C.jpg"
+/168 = "racoonL_157CC.jpg"
+/169 = "racoonL_112CC.jpg"
+/170 = "racoonL_67CC.jpg"
+/171 = "racoonL_22CC.jpg"
+/172 = "rhinoL_0.jpg"
+/173 = "rhinoL_22C.jpg"
+/174 = "rhinoL_67C.jpg"
+/175 = "rhinoL_112C.jpg"
+/176 = "rhinoL_157C.jpg"
+/177 = "rhinoL_157CC.jpg"
+/178 = "rhinoL_112CC.jpg"
+/179 = "rhinoL_67CC.jpg"
+/180 = "rhinoL_22CC.jpg"
+/181 = "sealionL_0.jpg"
+/182 = "sealionL_22C.jpg"
+/183 = "sealionL_67C.jpg"
+/184 = "sealionL_112C.jpg"
+/185 = "sealionL_157C.jpg"
+/186 = "sealionL_157CC.jpg"
+/187 = "sealionL_112CC.jpg"
+/188 = "sealionL_67CC.jpg"
+/189 = "sealionL_22CC.jpg"
+/190 = "sheepL_0.jpg"
+/191 = "sheepL_22C.jpg"
+/192 = "sheepL_67C.jpg"
+/193 = "sheepL_112C.jpg"
+/194 = "sheepL_157C.jpg"
+/195 = "sheepL_157CC.jpg"
+/196 = "sheepL_112CC.jpg"
+/197 = "sheepL_67CC.jpg"
+/198 = "sheepL_22CC.jpg"
+/199 = "tigerL_0.jpg"
+/200 = "tigerL_22C.jpg"
+/201 = "tigerL_67C.jpg"
+/202 = "tigerL_112C.jpg"
+/203 = "tigerL_157C.jpg"
+/204 = "tigerL_157CC.jpg"
+/205 = "tigerL_112CC.jpg"
+/206 = "tigerL_67CC.jpg"
+/207 = "tigerL_22CC.jpg"
+/208 = "turtleL_0.jpg"
+/209 = "turtleL_22C.jpg"
+/210 = "turtleL_67C.jpg"
+/211 = "turtleL_112C.jpg"
+/212 = "turtleL_157C.jpg"
+/213 = "turtleL_157CC.jpg"
+/214 = "turtleL_112CC.jpg"
+/215 = "turtleL_67CC.jpg"
+/216 = "turtleL_22CC.jpg"
+
+/217 = "alligatorR_0.jpg"
+/218 = "alligatorR_22C.jpg"
+/219 = "alligatorR_67C.jpg"
+/220 = "alligatorR_112C.jpg"
+/221 = "alligatorR_157C.jpg"
+/222 = "alligatorR_157CC.jpg"
+/223 = "alligatorR_112CC.jpg"
+/224 = "alligatorR_67CC.jpg"
+/225 = "alligatorR_22CC.jpg"
+/226 = "bearR_0.jpg"
+/227 = "bearR_22C.jpg"
+/228 = "bearR_67C.jpg"
+/229 = "bearR_112C.jpg"
+/230 = "bearR_157C.jpg"
+/231 = "bearR_157CC.jpg"
+/232 = "bearR_112CC.jpg"
+/233 = "bearR_67CC.jpg"
+/234 = "bearR_22CC.jpg"
+/235 = "bunnyR_0.jpg"
+/236 = "bunnyR_22C.jpg"
+/237 = "bunnyR_67C.jpg"
+/238 = "bunnyR_112C.jpg"
+/239 = "bunnyR_157C.jpg"
+/240 = "bunnyR_157CC.jpg"
+/241 = "bunnyR_112CC.jpg"
+/242 = "bunnyR_67CC.jpg"
+/243 = "bunnyR_22CC.jpg"
+/244 = "camelR_0.jpg"
+/245 = "camelR_22C.jpg"
+/246 = "camelR_67C.jpg"
+/247 = "camelR_112C.jpg"
+/248 = "camelR_157C.jpg"
+/249 = "camelR_157CC.jpg"
+/250 = "camelR_112CC.jpg"
+/251 = "camelR_67CC.jpg"
+/252 = "camelR_22CC.jpg"
+/253 = "catR_0.jpg"
+/254 = "catR_22C.jpg"
+/255 = "catR_67C.jpg"
+/256 = "catR_112C.jpg"
+/257 = "catR_157C.jpg"
+/258 = "catR_157CC.jpg"
+/259 = "catR_112CC.jpg"
+/260 = "catR_67CC.jpg"
+/261 = "catR_22CC.jpg"
+/262 = "cowR_0.jpg"
+/263 = "cowR_22C.jpg"
+/264 = "cowR_67C.jpg"
+/265 = "cowR_112C.jpg"
+/266 = "cowR_157C.jpg"
+/267 = "cowR_157CC.jpg"
+/268 = "cowR_112CC.jpg"
+/269 = "cowR_67CC.jpg"
+/270 = "cowR_22CC.jpg"
+/271 = "deerR_0.jpg"
+/272 = "deerR_22C.jpg"
+/273 = "deerR_67C.jpg"
+/274 = "deerR_112C.jpg"
+/275 = "deerR_157C.jpg"
+/276 = "deerR_157CC.jpg"
+/277 = "deerR_112CC.jpg"
+/278 = "deerR_67CC.jpg"
+/279 = "deerR_22CC.jpg"
+/280 = "dogR_0.jpg"
+/281 = "dogR_22C.jpg"
+/282 = "dogR_67C.jpg"
+/283 = "dogR_112C.jpg"
+/284 = "dogR_157C.jpg"
+/285 = "dogR_157CC.jpg"
+/286 = "dogR_112CC.jpg"
+/287 = "dogR_67CC.jpg"
+/288 = "dogR_22CC.jpg"
+/289 = "donkeyR_0.jpg"
+/290 = "donkeyR_22C.jpg"
+/291 = "donkeyR_67C.jpg"
+/292 = "donkeyR_112C.jpg"
+/293 = "donkeyR_157C.jpg"
+/294 = "donkeyR_157CC.jpg"
+/295 = "donkeyR_112CC.jpg"
+/296 = "donkeyR_67CC.jpg"
+/297 = "donkeyR_22CC.jpg"
+/298 = "elephantR_0.jpg"
+/299 = "elephantR_22C.jpg"
+/300 = "elephantR_67C.jpg"
+/301 = "elephantR_112C.jpg"
+/302 = "elephantR_157C.jpg"
+/303 = "elephantR_157CC.jpg"
+/304 = "elephantR_112CC.jpg"
+/305 = "elephantR_67CC.jpg"
+/306 = "elephantR_22CC.jpg"
+/307 = "foxR_0.jpg"
+/308 = "foxR_22C.jpg"
+/309 = "foxR_67C.jpg"
+/310 = "foxR_112C.jpg"
+/311 = "foxR_157C.jpg"
+/312 = "foxR_157CC.jpg"
+/313 = "foxR_112CC.jpg"
+/314 = "foxR_67CC.jpg"
+/315 = "foxR_22CC.jpg"
+/316 = "goatR_0.jpg"
+/317 = "goatR_22C.jpg"
+/318 = "goatR_67C.jpg"
+/319 = "goatR_112C.jpg"
+/320 = "goatR_157C.jpg"
+/321 = "goatR_157CC.jpg"
+/322 = "goatR_112CC.jpg"
+/323 = "goatR_67CC.jpg"
+/324 = "goatR_22CC.jpg"
+/325 = "horseR_0.jpg"
+/326 = "horseR_22C.jpg"
+/327 = "horseR_67C.jpg"
+/328 = "horseR_112C.jpg"
+/329 = "horseR_157C.jpg"
+/330 = "horseR_157CC.jpg"
+/331 = "horseR_112CC.jpg"
+/332 = "horseR_67CC.jpg"
+/333 = "horseR_22CC.jpg"
+/334 = "leopardR_0.jpg"
+/335 = "leopardR_22C.jpg"
+/336 = "leopardR_67C.jpg"
+/337 = "leopardR_112C.jpg"
+/338 = "leopardR_157C.jpg"
+/339 = "leopardR_157CC.jpg"
+/340 = "leopardR_112CC.jpg"
+/341 = "leopardR_67CC.jpg"
+/342 = "leopardR_22CC.jpg"
+/343 = "lionR_0.jpg"
+/344 = "lionR_22C.jpg"
+/345 = "lionR_67C.jpg"
+/346 = "lionR_112C.jpg"
+/347 = "lionR_157C.jpg"
+/348 = "lionR_157CC.jpg"
+/349 = "lionR_112CC.jpg"
+/350 = "lionR_67CC.jpg"
+/351 = "lionR_22CC.jpg"
+/352 = "monkeyR_0.jpg"
+/353 = "monkeyR_22C.jpg"
+/354 = "monkeyR_67C.jpg"
+/355 = "monkeyR_112C.jpg"
+/356 = "monkeyR_157C.jpg"
+/357 = "monkeyR_157CC.jpg"
+/358 = "monkeyR_112CC.jpg"
+/359 = "monkeyR_67CC.jpg"
+/360 = "monkeyR_22CC.jpg"
+/361 = "mouseR_0.jpg"
+/362 = "mouseR_22C.jpg"
+/363 = "mouseR_67C.jpg"
+/364 = "mouseR_112C.jpg"
+/365 = "mouseR_157C.jpg"
+/366 = "mouseR_157CC.jpg"
+/367 = "mouseR_112CC.jpg"
+/368 = "mouseR_67CC.jpg"
+/369 = "mouseR_22CC.jpg"
+/370 = "pigR_0.jpg"
+/371 = "pigR_22C.jpg"
+/372 = "pigR_67C.jpg"
+/373 = "pigR_112C.jpg"
+/374 = "pigR_157C.jpg"
+/375 = "pigR_157CC.jpg"
+/376 = "pigR_112CC.jpg"
+/377 = "pigR_67CC.jpg"
+/378 = "pigR_22CC.jpg"
+/379 = "racoonR_0.jpg"
+/380 = "racoonR_22C.jpg"
+/381 = "racoonR_67C.jpg"
+/382 = "racoonR_112C.jpg"
+/383 = "racoonR_157C.jpg"
+/384 = "racoonR_157CC.jpg"
+/385 = "racoonR_112CC.jpg"
+/386 = "racoonR_67CC.jpg"
+/387 = "racoonR_22CC.jpg"
+/388 = "rhinoR_0.jpg"
+/389 = "rhinoR_22C.jpg"
+/390 = "rhinoR_67C.jpg"
+/391 = "rhinoR_112C.jpg"
+/392 = "rhinoR_157C.jpg"
+/393 = "rhinoR_157CC.jpg"
+/394 = "rhinoR_112CC.jpg"
+/395 = "rhinoR_67CC.jpg"
+/396 = "rhinoR_22CC.jpg"
+/397 = "sealionR_0.jpg"
+/398 = "sealionR_22C.jpg"
+/399 = "sealionR_67C.jpg"
+/400 = "sealionR_112C.jpg"
+/401 = "sealionR_157C.jpg"
+/402 = "sealionR_157CC.jpg"
+/403 = "sealionR_112CC.jpg"
+/404 = "sealionR_67CC.jpg"
+/405 = "sealionR_22CC.jpg"
+/406 = "sheepR_0.jpg"
+/407 = "sheepR_22C.jpg"
+/408 = "sheepR_67C.jpg"
+/409 = "sheepR_112C.jpg"
+/410 = "sheepR_157C.jpg"
+/411 = "sheepR_157CC.jpg"
+/412 = "sheepR_112CC.jpg"
+/413 = "sheepR_67CC.jpg"
+/414 = "sheepR_22CC.jpg"
+/415 = "tigerR_0.jpg"
+/416 = "tigerR_22C.jpg"
+/417 = "tigerR_67C.jpg"
+/418 = "tigerR_112C.jpg"
+/419 = "tigerR_157C.jpg"
+/420 = "tigerR_157CC.jpg"
+/421 = "tigerR_112CC.jpg"
+/422 = "tigerR_67CC.jpg"
+/423 = "tigerR_22CC.jpg"
+/424 = "turtleR_0.jpg"
+/425 = "turtleR_22C.jpg"
+/426 = "turtleR_67C.jpg"
+/427 = "turtleR_112C.jpg"
+/428 = "turtleR_157C.jpg"
+/429 = "turtleR_157CC.jpg"
+/430 = "turtleR_112CC.jpg"
+/431 = "turtleR_67CC.jpg"
+/432 = "turtleR_22CC.jpg"
+</item>
+
+contains the 9 pics for the animal used for the training demo
+<item demoanimals>
+/1 = "frogL_0.jpg"
+/2 = "frogL_22C.jpg"
+/3 = "frogL_67C.jpg"
+/4 = "frogL_112C.jpg"
+/5 = "frogL_157C.jpg"
+/6 = "frogL_157CC.jpg"
+/7 = "frogL_112CC.jpg"
+/8 = "frogL_67CC.jpg"
+/9 = "frogL_22CC.jpg"
+</item>
+
+<item practiceinstructions>
+/1 = "practiceinstructions.jpg"
+</item>
+
+<item feedback>
+/1 = "posfeedback.jpg"
+/2 = "negfeedback.jpg"
+</item>
+
+
+<item traininginstructions>
+/1 = "Play with the left and rght Shift keys. See how you can move the frog on your right?"
+/2 = "Use the 'left Shift' key to rotate the frog in a counter-clockwise
+Use the 'right Shift' key to rotate the frog in a clockwise rotation"
+/3 = "They are the same!
+Now, press <SPACEBAR>"
+</item>
+
+**************************************************************************************************************
+**************************************************************************************************************
+	EDITABLE INSTRUCTIONS: change instructions here
+**************************************************************************************************************
+**************************************************************************************************************
+
+<item instructionslides>
+/1 = "MentalRotationInstruct_keyboard1.jpg"
+/2 = "MentalRotationInstruct_keyboard2.jpg"
+/3 = "MentalRotationInstruct_keyboard3.jpg"
+/4 = "MentalRotationInstruct_keyboard4.jpg"
+/5 = "MentalRotationInstruct_keyboard5.jpg"
+/6 = "MentalRotationInstruct_keyboard6.jpg"
+/7 = "MentalRotationInstruct_keyboard7.jpg"
+/8 = "MentalRotationInstruct_keyboard8.jpg"
+/9 = "MentalRotationInstruct_keyboard9.jpg"
+/10 = "MentalRotationInstruct_keyboard10.jpg"
+/11 = "MentalRotationInstruct_keyboard11.jpg"
+</item>
+
+
+***********************************************************
+these instructions will be run if the script is
+run on a touchscreen
+***********************************************************
+
+<text touchscreenInstruct1>
+/ items = ("General Note on Touchscreen Usage
+ for this Task:")
+/ fontstyle = ("Arial", 5%, true, false, false, false, 5, 1)
+/ position = (50%, 20%)
+/ size = (80%, 20%)
+/ vjustify = center
+</text>
+
+<text touchscreenInstruct2>
+/ items = ("Response buttons/keys are at the bottom of your screen")
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (50%, 50%)
+/ size = (70%, 30%)
+/ vjustify = center
+</text>
+
+
+
+**************************************************************************************************************
+**************************************************************************************************************
+	EDITABLE LISTS: change editable lists here
+**************************************************************************************************************
+**************************************************************************************************************
+
+Note: this list assigns the 24 test animals to pretest, training, posttest
+by default, the assignment is done randomly without replacement.
+
+!If the assignment should be the same as in Wiedenbauer & Jansen-Osmann (2008),
+then replace 
+
+/replace = false with /selectionmode = sequence
+
+<list assignanimals>
+/items = (10, 11, 1, 6, 14, 13, 2, 9, 8, 18, 23, 12, 16, 3, 5, 17, 24, 21, 4, 15, 20, 7, 22, 19)
+/replace = false
+/selectionrate = always
+</list>
+
+**************************************************************************************************************
+								!!!REMAINING CODE: Customize after careful consideration only!!!
+**************************************************************************************************************
+
+
+**************************************************************************************************************
+**************************************************************************************************************
+	DEFAULTS
+**************************************************************************************************************
+**************************************************************************************************************
+script requires Inquisit 5.0.0.0 or higher
+
+<defaults>
+/canvasaspectratio = (4,3)
+/minimumversion = "5.0.0.0"
+/ fontstyle = ("Arial", 3%, false, false, false, false, 5, 1)
+/txbgcolor = white
+/ txcolor = (0, 0, 0)
+/inputdevice = keyboard
+</defaults>
+
+**************************************************************************************************************
+**************************************************************************************************************
+	DATA
+**************************************************************************************************************
+**************************************************************************************************************
+
+Note: data file explanations under User Manual Information at the top
+
+********************
+raw data
+********************
+
+<data>
+/columns = (build, computer.platform, date, time, subject, group, blockcode, blocknum, trialcode, trialnum, 
+values.animalnumber, values.direction, values.oppositedirection, values.angle, values.angleB, values.sameness,
+values.pretest1, values.pretest2, values.pretest3, values.pretest4, values.pretest5, values.pretest6,
+values.training1, values.training2, values.training3, values.training4, values.training5, values.training6, values.training7, values.training8, values.training9, values.training10, values.training11, values.training12, 
+values.posttest1, values.posttest2, values.posttest3, values.posttest4, values.posttest5, values.posttest6, values.posttest7, 
+values.posttest8, values.posttest9, values.posttest10, values.posttest11, values.posttest12,
+stimulusitem, stimulusitem, response, correct, latency,
+values.countpretest_different, values.countpretest_same,
+values.pretesthits_22, values.pretesthits_67, values.pretesthits_112, values.pretesthits_157, 
+values.pretestmisses_22, values.pretestmisses_67, values.pretestmisses_112, values.pretestmisses_157, 
+values.pretestFAs_22, values.pretestFAs_67, values.pretestFAs_112, values.pretestFAs_157, 
+values.pretestCRs_22, values.pretestCRs_67, values.pretestCRs_112, values.pretestCRs_157, 
+
+values.countposttest_different, values.countposttest_same,
+values.posttesthits_22, values.posttesthits_67, values.posttesthits_112, values.posttesthits_157, 
+values.posttestmisses_22, values.posttestmisses_67, values.posttestmisses_112, values.posttestmisses_157, 
+values.posttestFAs_22, values.posttestFAs_67, values.posttestFAs_112, values.posttestFAs_157, 
+values.posttestCRs_22, values.posttestCRs_67, values.posttestCRs_112, values.posttestCRs_157)
+/separatefiles = true
+</data>
+********************
+summary data
+********************
+
+<summarydata>
+/columns = (script.startdate, script.starttime, script.subjectid, script.groupid, script.elapsedtime, computer.platform, values.completed,
+expressions.prophits_pretest, expressions.propfas_pretest, expressions.prophits_posttest, expressions.propfas_posttest,
+
+expressions.properror_pretest, expressions.properror_pretest22, expressions.properror_pretest67,expressions.properror_pretest112, expressions.properror_pretest157,
+expressions.properror_posttest, expressions.properror_posttest22, expressions.properror_posttest67,expressions.properror_posttest112, expressions.properror_posttest157,
+
+expressions.meanRTpretest, expressions.meanrtpretest_22, expressions.meanrtpretest_67, expressions.meanrtpretest_112, expressions.meanrtpretest_157, 
+expressions.meanRTposttest, expressions.meanrtposttest_22, expressions.meanrtposttest_67, expressions.meanrtposttest_112, expressions.meanrtposttest_157,
+expressions.properror_training)
+</summarydata>
+
+
+*******************************************************************************************************************
+*******************************************************************************************************************
+	VALUES: automatically updated
+*******************************************************************************************************************
+*******************************************************************************************************************
+/completed:						0 = script was not completed; 1 = script was completed (all conditions run)
+/responsekey_Different:	 		stores the scancode of the assigned responsekey for different responses
+/responsekeyDifferent_label:	stores the label (e.g. 'A') for the assigned responsekey for different responses
+/responsekey_Same:	 			stores the scancode of the assigned responsekey for same responses
+/responsekeySame_label:			stores the label (e.g. 'A') for the assigned responsekey for same responses
+/animalnumber:					stores the current animal (1 = bear....24 = turtle, in alphabetical order) being tested
+/direction						stores the current direction being tested: 1 = base looks left; 2 = base looks right
+/oppositedirection:				stores the current opposite direction of the base
+/angle:							stores the current angle being tested (2 = 22.5° clockwise....9 = 157.5° counterclockwise)
+/angleB:						1 = 22.5° clockwise/counterclockwise 
+								2 = 67.5° clockwise/counterclockwise
+								3 = 112.5° clockwise/counterclockwise
+								4 = 157.5° clockwise/counterclockwise
+/sameness:						1 = comp is the same; 2 = comp is mirror image (looks in opposite direction)
+
+/pretest1-
+/pretest6:						store the 6 animals assigned to the pretest
+/training1-
+/training12:					store the 12 animals assigned to the training
+/posttest1-
+/posttest12:					store the 12 animals assigned to the posttest
+
+/quadrant:						the quadrant that the current mouse coordinates are in (see expressions.determinequadrant)
+/current_x:						stores the x mouse coordinate at the end of a trial
+/current_y:						stores the x mouse coordinate at the end of a trial
+/index:							helper variable to access the correct instruction slides
+
+<values>
+/completed = 0
+/responsekey_Different = 0
+/responsekeyDifferent_label = ""
+/responsekey_Same = 0
+/responsekeySame_label = ""
+/animalnumber = 1
+/direction = 1
+/oppositedirection = 2
+/angle = 1
+/angleB = 0
+/sameness = 1
+
+/pretest1 = 0
+/pretest2 = 0
+/pretest3 = 0
+/pretest4 = 0
+/pretest5 = 0
+/pretest6 = 0
+/training1 = 0
+/training2 = 0
+/training3 = 0
+/training4 = 0
+/training5 = 0
+/training6 = 0
+/training7 = 0
+/training8 = 0
+/training9 = 0
+/training10 = 0
+/training11 = 0
+/training12 = 0
+/posttest1 = 0
+/posttest2 = 0
+/posttest3 = 0
+/posttest4 = 0
+/posttest5 = 0
+/posttest6 = 0
+/posttest7 = 0
+/posttest8 = 0
+/posttest9 = 0
+/posttest10 = 0
+/posttest11 = 0
+/posttest12 = 0
+
+/quadrant = 0
+/current_x = 0
+/current_y = 0
+/index = 0
+</values>
+
+Pretest Summary Variables
+/countpretest_same:								counts all pretest Same trials
+/countpretest_different:						counts all pretest Different trials
+/pretestHits_22 -
+/pretestHits_157:								counts all hits (hit = correct in same trials) for pretest, separately for each angle
+/pretestMisses_2C-
+/pretestMisses_157:								counts all Misses (miss = incorrect in same trials) for pretest, separately for each angle
+/pretestFAs_22-
+/pretestFAs_157:								counts all False Alarms (FA = incorrect in different trials -> pressing 'same' for mirror images) for pretest, separately for each angle
+/pretestCRs_22-
+/pretestCRs_157:								counts all Correct Rejections (CR = correct in different trials) for pretest, separately for each angle
+
+posttest Summary Variables
+/countposttest_same:							counts all posttest Same trials
+/countposttest_different:						counts all posttest Different trials
+/posttestHits_22 -
+/posttestHits_157:								counts all hits (hit = correct in same trials) for posttest, separately for each angle
+/posttestMisses_22-
+/posttestMisses_157:							counts all Misses (miss = incorrect in same trials) for posttest, separately for each angle
+/posttestFAs_22-
+/posttestFAs_157:								counts all False Alarms (FA = incorrect in different trials -> pressing 'same' for mirror images) for posttest, separately for each angle
+/posttestCRs_22-
+/posttestCRs_157:								counts all Correct Rejections (CR = correct in different trials) for posttest, separately for each angle
+
+/counttraining:									counts all training trials
+/trainingerrors:								counts the number of errors during training
+
+<values>
+/countpretest_same = 0
+/countpretest_different = 0
+/pretestHits_22 = 0
+/pretestHits_67 = 0
+/pretestHits_112 = 0
+/pretestHits_157 = 0
+/pretestMisses_22 = 0
+/pretestMisses_67 = 0
+/pretestMisses_112 = 0
+/pretestMisses_157 = 0
+/pretestFAs_22 = 0
+/pretestFAs_67 = 0
+/pretestFAs_112 = 0
+/pretestFAs_157 = 0
+/pretestCRs_22 = 0
+/pretestCRs_67 = 0
+/pretestCRs_112 = 0
+/pretestCRs_157 = 0
+/sumRTpretestHits_22 = 0
+/sumRTpretestHits_67 = 0
+/sumRTpretestHits_112 = 0
+/sumRTpretestHits_157 = 0
+
+/countposttest_same = 0
+/countposttest_different = 0
+/posttestHits_22 = 0
+/posttestHits_67 = 0
+/posttestHits_112 = 0
+/posttestHits_157 = 0
+/posttestMisses_22 = 0
+/posttestMisses_67 = 0
+/posttestMisses_112 = 0
+/posttestMisses_157 = 0
+/posttestFAs_22 = 0
+/posttestFAs_67 = 0
+/posttestFAs_112 = 0
+/posttestFAs_157 = 0
+/posttestCRs_22 = 0
+/posttestCRs_67 = 0
+/posttestCRs_112 = 0
+/posttestCRs_157 = 0
+/sumRTposttestHits_22 = 0
+/sumRTposttestHits_67 = 0
+/sumRTposttestHits_112 = 0
+/sumRTposttestHits_157 = 0
+
+/counttraining = 0
+/trainingerrors = 0
+
+/rotationdirection = 0
+</values>
+
+*******************************************************************************************************************
+*******************************************************************************************************************
+	EXPRESSIONS
+*******************************************************************************************************************
+*******************************************************************************************************************
+
+/assignitemnumbers:			assigns the 24 animals to pre (6), training (12), and posttest (12). Training and Posttest use 6 overlapping animals.
+/basekey:					calculates the itemnumber from item.animals that needs to be presented as the current base (=stimulus with 0deg rotation)
+							given the current values.direction and values.animalnumber
+/compkey_S:					calculates the itemnumber from item.animals that needs to be presented as the current same comparison animal
+							given the current values.direction, values.animalnumber and values.angle
+/compkey_D:					calculates the itemnumber from item.animals that needs to be presented as the current different comparison animal
+							given the current values.oppositedirection, values.animalnumber and values.angle
+
+<expressions>
+/assignitemnumbers = 	{values.pretest1 = list.assignanimals.nextvalue;
+						values.pretest2 = list.assignanimals.nextvalue;
+						values.pretest3 = list.assignanimals.nextvalue;
+						values.pretest4 = list.assignanimals.nextvalue;
+						values.pretest5 = list.assignanimals.nextvalue;
+						values.pretest6 = list.assignanimals.nextvalue;
+						values.training1 = list.assignanimals.nextvalue; 
+						values.posttest1 = values.training1;
+						values.training2 = list.assignanimals.nextvalue; 
+						values.posttest2 = values.training2;
+						values.training3 = list.assignanimals.nextvalue; 
+						values.posttest3 = values.training3;
+						values.training4 = list.assignanimals.nextvalue; 
+						values.posttest4 = values.training4;
+						values.training5 = list.assignanimals.nextvalue; 
+						values.posttest5 = values.training5;
+						values.training6 = list.assignanimals.nextvalue; 
+						values.posttest6 = values.training6;
+						values.training7 = list.assignanimals.nextvalue;
+						values.training8 = list.assignanimals.nextvalue;
+						values.training9 = list.assignanimals.nextvalue;
+						values.training10 = list.assignanimals.nextvalue;
+						values.training11 = list.assignanimals.nextvalue;
+						values.training12 = list.assignanimals.nextvalue;
+						values.posttest7 = list.assignanimals.nextvalue;
+						values.posttest8 = list.assignanimals.nextvalue;
+						values.posttest9 = list.assignanimals.nextvalue;
+						values.posttest10 = list.assignanimals.nextvalue;
+						values.posttest11 = list.assignanimals.nextvalue;
+						values.posttest12 = list.assignanimals.nextvalue}
+
+/basekey = 1 + (values.direction - 1) * 216 + (values.animalnumber - 1) * 9 
+/compkey_S = 1 + (values.direction - 1) * 216 + (values.animalnumber - 1) * 9 + (values.angle - 1)
+/compkey_D = 1 + (values.oppositedirection - 1) * 216 + (values.animalnumber - 1) * 9 + (values.angle - 1)
+
+/practicebasekey = 1 + (values.direction - 1) * 14 + (values.animalnumber - 1) * 7 
+/practicecompkey_S = 1 + (values.direction - 1) * 14 + (values.animalnumber - 1) * 7 + (values.angle - 1)
+/practicecompkey_D = 1 + (values.oppositedirection - 1) * 14 + (values.animalnumber - 1) * 7 + (values.angle - 1)
+</expressions>
+
+**************************************
+Summary Variables
+**************************************
+/properror_pretest:			proportion errors on the pretest (averaged over all angles)
+/properror_posttest:		proportion errors on the posttest (averaged over all angles)
+
+/propHits_pretest:			proportion hits on the pretest (averaged over all angles) (hit = correct in same trials) 
+/propFAs_pretest:			proportion False Alarms on the pretest (FA = incorrect in different trials => pressing 'same' for mirror images)
+/propHits_posttest:			proportion hits on the posttest (averaged over all angles)
+/propFAs_posttest:			proportion False Alarms on the posttest
+
+/properror_pretest22:		proportion errors for 22.5° angles in pretest
+/properror_pretest67:		proportion errors for 67.5° angles in pretest
+/properror_pretest112:		proportion errors for 112.5° angles in pretest
+/properror_pretest157:		proportion errors for 157.5° angles in pretest
+/properror_posttest22:		proportion errors for 22.5° angles in posttest
+/properror_posttest67:		proportion errors for 67.5° angles in posttest
+/properror_posttest112:		proportion errors for 112.5° angles in posttest
+/properror_posttest157:		proportion errors for 157.5° angles in posttest
+
+/meanRTpretest:				mean latency of hits in pretest averaged over all angles (hit = correct in same trials)
+/meanRTposttest:			mean latency of hits in posttest averaged over all angles (hit = correct in same trials)
+
+/meanRTpretest_22:			mean latency of hits for 22.5° angles in pretest (hit = correct in same trials)
+/meanRTpretest_67:			mean latency of hits for 67.5° angles in pretest (hit = correct in same trials)
+/meanRTpretest_112:			mean latency of hits for 112.5° angles in pretest (hit = correct in same trials)
+/meanRTpretest_157:			mean latency of hits for 157.5° angles in pretest (hit = correct in same trials)
+
+/meanRTposttest_22:			mean latency of hits for 22.5° angles in posttest (hit = correct in same trials)
+/meanRTposttest_67:			mean latency of hits for 67.5° angles in posttest (hit = correct in same trials)
+/meanRTposttest_112:		mean latency of hits for 112.5° angles in posttest (hit = correct in same trials)
+/meanRTposttest_157:		mean latency of hits for 157.5° angles in posttest (hit = correct in same trials)
+
+/properror_training: 		prop errors during training (across all angles)
+
+<expressions>
+/properror_pretest = 1 - ((values.pretesthits_22 + values.pretesthits_67 + values.pretesthits_112 + values.pretesthits_157+
+values.pretestCRs_22 + values.pretestCRs_67 + values.pretestCRs_112 + values.pretestCRs_157)/(values.countpretest_different + values.countpretest_same))
+/properror_posttest = 1 - ((values.posttesthits_22 + values.posttesthits_67 + values.posttesthits_112 + values.posttesthits_157+
+values.posttestCRs_22 + values.posttestCRs_67 + values.posttestCRs_112 + values.posttestCRs_157)/(values.countposttest_different + values.countposttest_same))
+
+/propHits_pretest = (values.pretesthits_22 + values.pretesthits_67 + values.pretesthits_112 + values.pretesthits_157) / 48
+/propFAs_pretest = (values.pretestFAs_22 + values.pretestFAs_67 + values.pretestFAs_112 + values.pretestFAs_157) / 48
+/propHits_posttest = (values.posttesthits_22 + values.posttesthits_67 + values.posttesthits_112 + values.posttesthits_157) / 96
+/propFAs_posttest = (values.posttestFAs_22 + values.posttestFAs_67 + values.posttestFAs_112 + values.posttestFAs_157) / 96
+
+/properror_pretest22 = (values.pretestmisses_22 + values.pretestFAs_22)/24
+/properror_pretest67 = (values.pretestmisses_67 + values.pretestFAs_67)/24
+/properror_pretest112 = (values.pretestmisses_112 + values.pretestFAs_112)/24
+/properror_pretest157 = (values.pretestmisses_157 + values.pretestFAs_157)/24
+/properror_posttest22 = (values.posttestmisses_22 + values.posttestFAs_22)/48
+/properror_posttest67 = (values.posttestmisses_67 + values.posttestFAs_67)/48
+/properror_posttest112 = (values.posttestmisses_112 + values.posttestFAs_112)/48
+/properror_posttest157 = (values.posttestmisses_157 + values.posttestFAs_157)/48
+
+/meanRTpretest = (values.sumrtpretesthits_22 + values.sumrtpretesthits_67 + values.sumrtpretesthits_112 + values.sumrtpretesthits_157)/
+(values.pretesthits_22 + values.pretesthits_67 + values.pretesthits_112 + values.pretesthits_157)
+/meanRTposttest = (values.sumrtposttesthits_22 + values.sumrtposttesthits_67 + values.sumrtposttesthits_112 + values.sumrtposttesthits_157)/
+(values.posttesthits_22 + values.posttesthits_67 + values.posttesthits_112 + values.posttesthits_157)
+
+/meanRTpretest_22 = values.sumrtpretesthits_22/values.pretesthits_22
+/meanRTpretest_67 = values.sumrtpretesthits_67/values.pretesthits_67
+/meanRTpretest_112 = values.sumrtpretesthits_112/values.pretesthits_112
+/meanRTpretest_157 = values.sumrtpretesthits_157/values.pretesthits_157
+/meanRTposttest_22 = values.sumrtposttesthits_22/values.posttesthits_22
+/meanRTposttest_67 = values.sumrtposttesthits_67/values.posttesthits_67
+/meanRTposttest_112 = values.sumrtposttesthits_112/values.posttesthits_112
+/meanRTposttest_157 = values.sumrtposttesthits_157/values.posttesthits_157
+
+/properror_training = values.trainingerrors/values.counttraining
+</expressions>
+
+*************************************
+Functions for Training Module
+*************************************
+/xcoordinate:						converts the mouse pixel x-coordinate into a coordinate with (0,0) at the center of the rotating pic
+/ycoordinate:						converts the mouse pixel y-coordinate into a coordinate with (0,0) at the center of the rotating pic
+
+/currentslope:						calculates the current slope of the origin line going through mouse coordinates (note: (0,0) is center of rotating pic)
+/borderslope_1:						calculates the slope of of a (15deg) angle (going through origin)
+/borderslope_2a:					calculates the slope of of a (22.5deg-7.5deg = 15deg) angle
+/borderslope_2b:					calculates the slope of of a (22.5deg+7.5deg = 30deg) angle
+/borderslope_3a:					calculates the slope of of a (67.5deg-7.5deg = 60deg) angle
+/borderslope_3b:					calculates the slope of of a (67.5deg+7.5deg = 75deg) angle
+
+/determinequadrant = 				determines the quadrant that the mouse coordinates are in (note: coordinate (0,0) is the center of the rotating pic)
+									1: x and y coordinates < 0
+									2: x > 0; y < 0
+									3: x > 0; y > 0
+									4: x < 0; y > 0
+
+/anglemapping = 					determines whether the new mouse coordinates are mapping roughly on one of the 9 picture angles
+
+
+<expressions>
+/xcoordinate = if (mouse.x/display.canvaswidth < 0.75) (-1) * abs(75 - (mouse.x/display.canvaswidth)*100) * 2 else abs(75 - (mouse.x/display.canvaswidth)*100) * 2
+/ycoordinate = if (mouse.y/display.canvasheight < 0.5) (-1) * abs(50 - (mouse.y/display.canvasheight)*100) * 2 else abs(50 - (mouse.y/display.canvasheight)*100) * 2
+
+/currentslope = if (expressions.xcoordinate != 0) abs(expressions.ycoordinate/expressions.xcoordinate) else 10000000000000000000000
+/borderslope_1 = tan(rad(15))
+/borderslope_2a = tan(rad(22.5-7.5))
+/borderslope_2b = tan(rad(22.5+7.5))
+/borderslope_3a = tan(rad(67.5-7.5))
+/borderslope_3b = tan(rad(67.5+7.5))
+
+/determinequadrant = 
+						if (expressions.xcoordinate <= 0 && expressions.ycoordinate <= 0) values.quadrant = 1;
+						if (expressions.xcoordinate >= 0 && expressions.ycoordinate < 0) values.quadrant = 2;
+						if (expressions.xcoordinate >= 0 && expressions.ycoordinate > 0) values.quadrant = 3;
+						if (expressions.xcoordinate <= 0 && expressions.ycoordinate > 0) values.quadrant = 4
+
+/anglemapping = 
+			if (values.direction == 1 && values.quadrant == 1 && expressions.currentslope <= expressions.borderslope_1) values.angle = 1;
+			if (values.direction == 1 && values.quadrant == 1 && expressions.currentslope > expressions.borderslope_2a && expressions.currentslope < expressions.borderslope_2b) values.angle = 2;
+			if (values.direction == 1 && values.quadrant == 1 && expressions.currentslope > expressions.borderslope_3a && expressions.currentslope < expressions.borderslope_3b) values.angle = 3;
+
+			if (values.direction == 1 && values.quadrant == 2 && expressions.currentslope > expressions.borderslope_3a && expressions.currentslope < expressions.borderslope_3b) values.angle = 4;
+			if (values.direction == 1 && values.quadrant == 2 && expressions.currentslope > expressions.borderslope_2a && expressions.currentslope < expressions.borderslope_2b) values.angle = 5;
+
+			if (values.direction == 1 && values.quadrant == 3 && expressions.currentslope > expressions.borderslope_2a && expressions.currentslope < expressions.borderslope_2b) values.angle = 6;
+			if (values.direction == 1 && values.quadrant == 3 && expressions.currentslope > expressions.borderslope_3a && expressions.currentslope < expressions.borderslope_3b) values.angle = 7;
+
+			if (values.direction == 1 && values.quadrant == 4 && expressions.currentslope > expressions.borderslope_3a && expressions.currentslope < expressions.borderslope_3b) values.angle = 8;
+			if (values.direction == 1 && values.quadrant == 4 && expressions.currentslope > expressions.borderslope_2a && expressions.currentslope < expressions.borderslope_2b) values.angle = 9;
+			if (values.direction == 1 && values.quadrant == 4 && expressions.currentslope <= expressions.borderslope_1) values.angle = 1;
+
+			if (values.direction == 2 && values.quadrant == 3 && (expressions.currentslope <= expressions.borderslope_1)) values.angle = 1;
+			if (values.direction == 2 && values.quadrant == 3 && expressions.currentslope > expressions.borderslope_2a && expressions.currentslope < expressions.borderslope_2b) values.angle = 2;
+			if (values.direction == 2 && values.quadrant == 3 && expressions.currentslope > expressions.borderslope_3a && expressions.currentslope < expressions.borderslope_3b) values.angle = 3;
+
+			if (values.direction == 2 && values.quadrant == 4 && expressions.currentslope > expressions.borderslope_3a && expressions.currentslope < expressions.borderslope_3b) values.angle = 4;
+			if (values.direction == 2 && values.quadrant == 4 && expressions.currentslope > expressions.borderslope_2a && expressions.currentslope < expressions.borderslope_2b) values.angle = 5;
+
+			if (values.direction == 2 && values.quadrant == 1 && expressions.currentslope > expressions.borderslope_2a && expressions.currentslope < expressions.borderslope_2b) values.angle = 6;
+			if (values.direction == 2 && values.quadrant == 1 && expressions.currentslope > expressions.borderslope_3a && expressions.currentslope < expressions.borderslope_3b) values.angle = 7;
+
+			if (values.direction == 2 && values.quadrant == 2 && expressions.currentslope > expressions.borderslope_3a && expressions.currentslope < expressions.borderslope_3b) values.angle = 8;
+			if (values.direction == 2 && values.quadrant == 2 && expressions.currentslope > expressions.borderslope_2a && expressions.currentslope < expressions.borderslope_2b) values.angle = 9;
+			if (values.direction == 2 && values.quadrant == 2 && (expressions.currentslope <= expressions.borderslope_1)) values.angle = 1;
+</expressions>
+
+*******************************************************************************************************************
+*******************************************************************************************************************
+	INSTRUCTIONS
+*******************************************************************************************************************
+*******************************************************************************************************************
+
+<picture instructionslide>
+/items = instructionslides
+/select = values.index
+/resetinterval = 10
+/size = (80%, 80%)
+</picture>
+
+<shape responsebox>
+/shape = rectangle
+/size = (75%, 7%)
+/position = (50%, 85%)
+/color = yellow
+</shape>
+
+<trial instructions>
+/ inputdevice = keyboard
+/ontrialbegin = [values.index += 1]
+/stimulusframes = [1 = responsebox, instructionslide]
+/validresponse = (57)
+/recorddata = false
+</trial>
+
+*************************************
+General Helper Instruction Trials/Blocks
+*************************************
+
+This trial is used when participants are asked to place their fingers on specific response
+buttons. On the touchscreen, this trial presents the (inactive) response buttons to the participants.
+trial getReady>
+/ stimulusframes = [1 = getReady]
+/ trialduration = 5000
+/ validresponse = (parameters.responsekey_left, parameters.responsekey_right)
+/ beginresponsetime = 5000
+/ errormessage = false
+/ recorddata = false
+</trial>
+
+Note: this trial is only run if the script is run on a Touchscreen
+<trial touchscreenInstruct>
+
+/ stimulusframes = [1 = touchscreenInstruct1, touchscreenInstruct2]
+/ validresponse = (57)
+/ recorddata = false
+</trial>
+/ skip = [
+	computer.haskeyboard || !computer.touch
+]
+Note: this block is only run if the script is run on a Touchscreen
+<block touchscreenInfo>
+/ trials = [1 = touchscreenInstruct]
+</block>
+
+
+*******************************************************************************************************************
+*******************************************************************************************************************
+	STIMULI
+*******************************************************************************************************************
+*******************************************************************************************************************
+
+*********************************
+practice feedback
+*********************************
+
+<picture posfeedback>
+/items = feedback
+/select = 1
+/position = (50%, 50%)
+/ size = (20%, 20%)
+/erase = false
+</picture>
+
+<picture negfeedback>
+/items = feedback
+/select = 2
+/position = (50%, 50%)
+/ size = (20%, 20%)
+/erase = false
+</picture>
+
+<text fixation>
+/items = ("+")
+/position = (50%, 50%)
+/ fontstyle = ("Arial", parameters.fontsize_fixation, false, false, false, false, 5, 1)
+/ txcolor = gray
+/txbgcolor = black
+</text>
+
+*********************************
+the bases: 0deg rotation
+*********************************
+
+<picture base>
+/items = animals
+/select = expressions.basekey
+/position = (25%, 50%)
+/size = (30%, 30%)
+/erase = false
+</picture>
+
+<picture practicebase>
+/items = practiceanimals
+/select = expressions.practicebasekey
+/position = (25%, 50%)
+/size = (30%, 30%)
+/erase = false
+</picture>
+
+<picture demobase>
+/items = demoanimals
+/select = 1
+/position = (25%, 50%)
+/size = (30%, 30%)
+/erase = false
+</picture>
+
+*****************************************************
+the comparison picture
+*****************************************************
+<picture comp_S>
+/items = animals
+/select = expressions.compkey_S
+/position = (75%, 50%)
+/size = (30%, 30%)
+/erase = false
+</picture>
+
+<picture comp_D>
+/items = animals
+/select = expressions.compkey_D
+/position = (75%, 50%)
+/size = (30%, 30%)
+/erase = false
+</picture>
+
+<picture practicecomp_S>
+/items = practiceanimals
+/select = expressions.practicecompkey_S
+/position = (75%, 50%)
+/size = (30%, 30%)
+/erase = false
+</picture>
+
+<picture practicecomp_D>
+/items = practiceanimals
+/select = expressions.practicecompkey_D
+/position = (75%, 50%)
+/size = (30%, 30%)
+/erase = false
+</picture>
+
+<picture democomp>
+/items = demoanimals
+/select = values.angle
+/position = (75%, 50%)
+/size = (30%, 30%)
+/erase = false
+</picture>
+
+*********************************************
+Response Buttons
+*********************************************
+
+<text redButton>
+/ items = ("Mirror")
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (25%, 80%)
+/ size = (15%, 8%)
+/ erase = false
+/ vjustify = center
+/ txcolor = white
+/ txbgcolor = black
+</text>
+
+<text greenButton>
+/ items = ("Identical")
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ position = (75%, 80%)
+/ size = (15%, 8%)
+/ erase = false
+/ vjustify = center
+/ txcolor = white
+/ txbgcolor = black
+</text>
+
+<text doneButton>
+/ items = ("done")
+/ fontstyle = ("Arial", 3%, true, false, false, false, 5, 1)
+/ txbgcolor = blue
+/ txcolor = white
+/ position = (50%, 80%)
+/ size = (15%, 8%)
+/ erase = false
+/ vjustify = center
+</text>
+
+*********************************************
+miscellaneous stimuli
+*********************************************
+
+<shape background>
+/shape = rectangle
+/color = black
+/position = (50%, 50%)
+/size = (100%, 100%)
+/erase = false
+</shape>
+
+<picture practiceinstructions>
+/items = practiceinstructions
+/select = 1
+/position = (50%, 20%)
+/erase = false
+/size = (40%, 40%)
+</picture>
+
+<text traininginstructions>
+/items = traininginstructions
+/select = 1
+/ fontstyle = ("Arial", 3%, false, false, false, false, 5, 1)
+/ txcolor = white
+/txbgcolor = black
+/position = (50%, 10%)
+/erase = false
+</text>
+
+<text traininginstructions2>
+/items = traininginstructions
+/select = 2
+/ fontstyle = ("Arial", 3%, false, false, false, false, 5, 1)
+/ txcolor = white
+/txbgcolor = black
+/position = (50%, 20%)
+/erase = false
+</text>
+
+<text traininginstructions3>
+/items = traininginstructions
+/select = 3
+/ fontstyle = ("Arial", 5%, false, false, false, false, 5, 1)
+/ txcolor = yellow
+/txbgcolor = black
+/position = (50%, 70%)
+/erase = false
+/hjustify = center
+/vjustify = center
+/halign = center
+/valign = center
+</text>
+
+*******************************************************************************************************************
+*******************************************************************************************************************
+	LISTS
+*******************************************************************************************************************
+*******************************************************************************************************************
+
+**********************************************
+practice
+the following lists govern the stimulus
+selection for the practice trials
+**********************************************
+
+Note: contains 12 repetitions of the 2 animals assigned to the practice (=24 practice trials)
+itemnumbers are randomly drawn without replacement
+<list practice_animalnumbers>
+/items = (1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2)
+/replace = false
+</list>
+
+Note: contains the Left(1)/Right(2) direction assigned to the 12 repetitions of the 2 practice stimuli
+The directions are tied to the currently selected index of the practice stimulus
+<list practice_directions>
+/items = (
+1, 2, 
+1, 2,
+1, 2, 
+1, 2,
+1, 2, 
+1, 2, 
+1, 2, 
+1, 2, 
+1, 2,
+1, 2, 
+1, 2, 
+1, 2)
+/selectionmode = list.practice_animalnumbers.currentindex
+</list>
+
+Note: contains the angels (2-7) assigned to the 12 repetitions of the 2 practice stimuli
+The angles are tied to the currently selected index of the practice stimulus
+2 = 10° Clockwise
+3 = 90° Clockwise
+4 = 170° Clockwise
+5 = 170° Clockwise
+6 = 90° CounterClockwise
+7 = 10° CounterClockwise
+(1 = 0° degree rotation stimulus)
+<list practice_angels>
+/items = (
+2, 2,
+3, 3,
+4, 4,
+5, 5, 
+6, 6,
+7, 7, 
+2, 2,
+3, 3,
+4, 4,
+5, 5, 
+6, 6,
+7, 7)
+/selectionmode = list.practice_animalnumbers.currentindex
+</list>
+
+Note: contains the sameness (1 = same; 2 = mirrorimage) assigned to the 12 repetitions of the 2 practice stimuli
+The sameness factor is tied to the currently selected index of the practice stimulus
+<list practice_sameness>
+/items = (
+1, 1, 
+1, 1,
+1, 1, 
+1, 1, 
+1, 1, 
+1, 1,
+2, 2,
+2, 2,
+2, 2,
+2, 2,
+2, 2,
+2, 2)
+/selectionmode = list.practice_animalnumbers.currentindex
+</list>
+
+**********************************************
+Pretest
+the following lists govern the stimulus
+selection for the pretest trials
+**********************************************
+
+Note: contains 16 repetitions of the 6 animals assigned to the pretest (=96 pretest trials)
+itemnumbers are randomly drawn without replacement
+<list pretest_animalnumbers>
+/items = (values.pretest1, values.pretest2, values.pretest3, values.pretest4, values.pretest5, values.pretest6, 
+values.pretest1, values.pretest2, values.pretest3, values.pretest4, values.pretest5, values.pretest6, 
+values.pretest1, values.pretest2, values.pretest3, values.pretest4, values.pretest5, values.pretest6, 
+values.pretest1, values.pretest2, values.pretest3, values.pretest4, values.pretest5, values.pretest6, 
+values.pretest1, values.pretest2, values.pretest3, values.pretest4, values.pretest5, values.pretest6, 
+values.pretest1, values.pretest2, values.pretest3, values.pretest4, values.pretest5, values.pretest6, 
+values.pretest1, values.pretest2, values.pretest3, values.pretest4, values.pretest5, values.pretest6, 
+values.pretest1, values.pretest2, values.pretest3, values.pretest4, values.pretest5, values.pretest6, 
+values.pretest1, values.pretest2, values.pretest3, values.pretest4, values.pretest5, values.pretest6, 
+values.pretest1, values.pretest2, values.pretest3, values.pretest4, values.pretest5, values.pretest6, 
+values.pretest1, values.pretest2, values.pretest3, values.pretest4, values.pretest5, values.pretest6, 
+values.pretest1, values.pretest2, values.pretest3, values.pretest4, values.pretest5, values.pretest6, 
+values.pretest1, values.pretest2, values.pretest3, values.pretest4, values.pretest5, values.pretest6, 
+values.pretest1, values.pretest2, values.pretest3, values.pretest4, values.pretest5, values.pretest6, 
+values.pretest1, values.pretest2, values.pretest3, values.pretest4, values.pretest5, values.pretest6, 
+values.pretest1, values.pretest2, values.pretest3, values.pretest4, values.pretest5, values.pretest6)
+/replace = false
+</list>
+
+Note: contains the Left(1)/Right(2) direction assigned to the 16 repetitions of the 6 pretest stimuli
+The directions are tied to the currently selected index of the pretest stimulus
+<list pretest_directions>
+/items = (
+1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2)
+/selectionmode = list.pretest_animalnumbers.currentindex
+</list>
+
+Note: contains the angels (2-9) assigned to the 16 repetitions of the 6 pretest stimuli
+The angles are tied to the currently selected index of the pretest stimulus
+2 = 22.5° Clockwise
+3 = 67.6° Clockwise
+4 = 112.5° Clockwise
+5 = 157.5° Clockwise
+6 = 157.5° CounterClockwise
+7 = 112.6° CounterClockwise
+8 = 67.5° CounterClockwise
+9 = 22.5° CounterClockwise
+(1 = 0 degree rotation stimulus)
+<list pretest_angels>
+/items = (
+2, 2, 2, 2, 2, 2, 
+3, 3, 3, 3, 3, 3, 
+4, 4, 4, 4, 4, 4, 
+5, 5, 5, 5, 5, 5, 
+6, 6, 6, 6, 6, 6, 
+7, 7, 7, 7, 7, 7, 
+8, 8, 8, 8, 8, 8, 
+9, 9, 9, 9, 9, 9, 
+2, 2, 2, 2, 2, 2, 
+3, 3, 3, 3, 3, 3, 
+4, 4, 4, 4, 4, 4, 
+5, 5, 5, 5, 5, 5, 
+6, 6, 6, 6, 6, 6, 
+7, 7, 7, 7, 7, 7, 
+8, 8, 8, 8, 8, 8, 
+9, 9, 9, 9, 9, 9)
+/selectionmode = list.pretest_animalnumbers.currentindex
+</list>
+
+Note: contains the sameness (1 = same; 2 = mirrorimage) assigned to the 16 repetitions of the 6 pretest stimuli
+The sameness factor is tied to the currently selected index of the pretest stimulus
+<list pretest_sameness>
+/items = (
+1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1,
+1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 
+2, 2, 2, 2, 2, 2, 
+2, 2, 2, 2, 2, 2, 
+2, 2, 2, 2, 2, 2, 
+2, 2, 2, 2, 2, 2,
+2, 2, 2, 2, 2, 2, 
+2, 2, 2, 2, 2, 2, 
+2, 2, 2, 2, 2, 2, 
+2, 2, 2, 2, 2, 2)
+/selectionmode = list.pretest_animalnumbers.currentindex
+</list>
+
+**********************************************
+Posttest
+the following lists govern the stimulus
+selection for the posttest trials
+**********************************************
+
+Note: contains 16 repetitions of the 12 animals assigned to the posttest (=192 posttest trials)
+itemnumbers are randomly drawn without replacement
+<list posttest_animalnumbers>
+/items = (
+values.posttest1, values.posttest2, values.posttest3, values.posttest4, values.posttest5, values.posttest6, values.posttest7, values.posttest8, values.posttest9, values.posttest10, values.posttest11, values.posttest12, 
+values.posttest1, values.posttest2, values.posttest3, values.posttest4, values.posttest5, values.posttest6, values.posttest7, values.posttest8, values.posttest9, values.posttest10, values.posttest11, values.posttest12,
+values.posttest1, values.posttest2, values.posttest3, values.posttest4, values.posttest5, values.posttest6, values.posttest7, values.posttest8, values.posttest9, values.posttest10, values.posttest11, values.posttest12,
+values.posttest1, values.posttest2, values.posttest3, values.posttest4, values.posttest5, values.posttest6, values.posttest7, values.posttest8, values.posttest9, values.posttest10, values.posttest11, values.posttest12,
+values.posttest1, values.posttest2, values.posttest3, values.posttest4, values.posttest5, values.posttest6, values.posttest7, values.posttest8, values.posttest9, values.posttest10, values.posttest11, values.posttest12,
+values.posttest1, values.posttest2, values.posttest3, values.posttest4, values.posttest5, values.posttest6, values.posttest7, values.posttest8, values.posttest9, values.posttest10, values.posttest11, values.posttest12,
+values.posttest1, values.posttest2, values.posttest3, values.posttest4, values.posttest5, values.posttest6, values.posttest7, values.posttest8, values.posttest9, values.posttest10, values.posttest11, values.posttest12,
+values.posttest1, values.posttest2, values.posttest3, values.posttest4, values.posttest5, values.posttest6, values.posttest7, values.posttest8, values.posttest9, values.posttest10, values.posttest11, values.posttest12,
+values.posttest1, values.posttest2, values.posttest3, values.posttest4, values.posttest5, values.posttest6, values.posttest7, values.posttest8, values.posttest9, values.posttest10, values.posttest11, values.posttest12,
+values.posttest1, values.posttest2, values.posttest3, values.posttest4, values.posttest5, values.posttest6, values.posttest7, values.posttest8, values.posttest9, values.posttest10, values.posttest11, values.posttest12,
+values.posttest1, values.posttest2, values.posttest3, values.posttest4, values.posttest5, values.posttest6, values.posttest7, values.posttest8, values.posttest9, values.posttest10, values.posttest11, values.posttest12,
+values.posttest1, values.posttest2, values.posttest3, values.posttest4, values.posttest5, values.posttest6, values.posttest7, values.posttest8, values.posttest9, values.posttest10, values.posttest11, values.posttest12,
+values.posttest1, values.posttest2, values.posttest3, values.posttest4, values.posttest5, values.posttest6, values.posttest7, values.posttest8, values.posttest9, values.posttest10, values.posttest11, values.posttest12,
+values.posttest1, values.posttest2, values.posttest3, values.posttest4, values.posttest5, values.posttest6, values.posttest7, values.posttest8, values.posttest9, values.posttest10, values.posttest11, values.posttest12,
+values.posttest1, values.posttest2, values.posttest3, values.posttest4, values.posttest5, values.posttest6, values.posttest7, values.posttest8, values.posttest9, values.posttest10, values.posttest11, values.posttest12,
+values.posttest1, values.posttest2, values.posttest3, values.posttest4, values.posttest5, values.posttest6,values.posttest7, values.posttest8, values.posttest9, values.posttest10, values.posttest11, values.posttest12)
+/replace = false
+</list>
+
+Note: contains the Left(1)/Right(2) direction assigned to the 16 repetitions of the 12 posttest stimuli
+The directions are tied to the currently selected index of the posttest stimulus
+<list posttest_directions>
+/items = (
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2)
+/selectionmode = list.posttest_animalnumbers.currentindex
+</list>
+
+Note: contains the angels (2-9) assigned to the 16 repetitions of the 12 posttest stimuli
+The angles are tied to the currently selected index of the posttest stimulus
+2 = 22.5° Clockwise
+3 = 67.6° Clockwise
+4 = 112.5° Clockwise
+5 = 157.5° Clockwise
+6 = 157.5° CounterClockwise
+7 = 112.6° CounterClockwise
+8 = 67.5° CounterClockwise
+9 = 22.5° CounterClockwise
+(1 = 0 degree rotation stimulus)
+<list posttest_angels>
+/items = (
+2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 
+3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
+4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 
+5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 
+6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 
+7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 
+8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 
+9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 
+2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 
+3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
+4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 
+5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 
+6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 
+7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 
+8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 
+9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9)
+/selectionmode = list.posttest_animalnumbers.currentindex
+</list>
+
+Note: contains the sameness (1 = same; 2 = mirrorimage) assigned to the 16 repetitions of the 12 posttest stimuli
+The sameness factor is tied to the currently selected index of the posttest stimulus
+<list posttest_sameness>
+/items = (
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 
+2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 
+2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 
+2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 
+2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 
+2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 
+2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 
+2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
+/selectionmode = list.posttest_animalnumbers.currentindex
+</list>
+
+**********************************************
+training
+the following lists govern the stimulus
+selection for the training trials
+**********************************************
+
+Note: contains 8 repetitions of the 12 animals assigned to the training (=192 training trials)
+itemnumbers are randomly drawn without replacement
+<list training_animalnumbers>
+/items = (
+values.training1, values.training2, values.training3, values.training4, values.training5, values.training6, values.training7, values.training8, values.training9, values.training10, values.training11, values.training12, 
+values.training1, values.training2, values.training3, values.training4, values.training5, values.training6, values.training7, values.training8, values.training9, values.training10, values.training11, values.training12,
+values.training1, values.training2, values.training3, values.training4, values.training5, values.training6, values.training7, values.training8, values.training9, values.training10, values.training11, values.training12,
+values.training1, values.training2, values.training3, values.training4, values.training5, values.training6, values.training7, values.training8, values.training9, values.training10, values.training11, values.training12,
+values.training1, values.training2, values.training3, values.training4, values.training5, values.training6, values.training7, values.training8, values.training9, values.training10, values.training11, values.training12,
+values.training1, values.training2, values.training3, values.training4, values.training5, values.training6, values.training7, values.training8, values.training9, values.training10, values.training11, values.training12,
+values.training1, values.training2, values.training3, values.training4, values.training5, values.training6, values.training7, values.training8, values.training9, values.training10, values.training11, values.training12,
+values.training1, values.training2, values.training3, values.training4, values.training5, values.training6, values.training7, values.training8, values.training9, values.training10, values.training11, values.training12)
+/replace = false
+</list>
+
+Note: contains the Left(1)/Right(2) direction assigned to the 8 repetitions of the 12 training stimuli
+The directions are tied to the currently selected index of the training stimulus
+<list training_directions>
+/items = (
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 
+1, 1, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2)
+/selectionmode = list.training_animalnumbers.currentindex
+</list>
+
+Note: contains the angels (2-9) assigned to the 8 repetitions of the 12 training stimuli
+The angles are tied to the currently selected index of the training stimulus
+2 = 22.5° Clockwise
+3 = 67.6° Clockwise
+4 = 112.5° Clockwise
+5 = 157.5° Clockwise
+6 = 157.5° CounterClockwise
+7 = 112.6° CounterClockwise
+8 = 67.5° CounterClockwise
+9 = 22.5° CounterClockwise
+(1 = 0 degree rotation stimulus)
+<list training_angels>
+/items = (
+2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 
+3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 
+4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 
+5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 
+6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 
+7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 
+8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 
+9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9)
+/selectionmode = list.training_animalnumbers.currentindex
+</list>
+
+Note: contains the sameness (1 = same) assigned to the 8 repetitions of the 12 training stimuli
+The sameness factor is tied to the currently selected index of the training stimulus
+(for training it's always the same)
+<list training_sameness>
+/items = (
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+/selectionmode = list.training_animalnumbers.currentindex
+</list>
+
+<list demo_angles>
+/items = (4, 5, 6, 7)
+/replace = false
+</list>
+
+*******************************************************************************************************************
+*******************************************************************************************************************
+	TRIALS
+*******************************************************************************************************************
+*******************************************************************************************************************
+
+<trial assignitemnumbers>
+/ontrialbegin = [expressions.assignitemnumbers]
+/trialduration = 0
+/recorddata = false
+</trial>
+
+***********************************************
+practice
+***********************************************
+
+Note: trial selects
+* the next itemnumber
+* the assigned direction of that itemnumber
+* the angle of the comp stimulus
+* the sameness of the comp stimulus (same or different)
+* calls the appropriate trial
+
+<trial practice_start>
+/ontrialbegin = [
+	values.animalnumber = list.practice_animalnumbers.nextvalue;
+	values.direction = list.practice_directions.nextvalue;
+	if (values.direction == 1) 
+		values.oppositedirection = 2;
+	else 
+		values.oppositedirection = 1;
+		
+	values.angle = list.practice_angels.nextvalue;
+	if (values.angle == 2 || values.angle == 7) values.angleB = 1;
+	else if (values.angle == 3 || values.angle == 6) values.angleB = 2;
+	else if (values.angle == 4 || values.angle == 5) values.angleB = 3;
+	
+	values.sameness = list.practice_sameness.nextvalue;
+]
+/stimulusframes = [1 = background, fixation]
+/trialduration = parameters.fixationduration
+/branch = [
+	if (values.sameness == 1) 
+		trial.practice_same;
+	else 
+		trial.practice_different;
+]
+/recorddata = false
+</trial>
+
+<trial practice_same>
+/ inputdevice = keyboard
+/stimulusframes = [1 = practicebase, practicecomp_S, greenButton, redButton]
+/validresponse = (42, 54)
+/correctresponse = (54)
+/correctmessage = true(posfeedback, 500)
+/errormessage = true(negfeedback, 500)
+</trial>
+
+<trial practice_different>
+/ inputdevice = keyboard
+/stimulusframes = [1 = practicebase, practicecomp_d, greenButton, redButton]
+/validresponse = (42, 54)
+/correctresponse = (42)
+/correctmessage = true(posfeedback, 500)
+/errormessage = true(negfeedback, 500)
+</trial>
+
+***********************************************
+Pretest
+***********************************************
+
+Note: trial selects
+* the next itemnumber
+* the assigned direction of that itemnumber
+* the angle of the comp stimulus
+* the sameness of the comp stimulus (same or different)
+* calls the appropriate trial
+
+<trial pretest_start>
+/ontrialbegin = [
+	values.animalnumber = list.pretest_animalnumbers.nextvalue;
+	values.direction = list.pretest_directions.nextvalue;
+	if (values.direction == 1) 
+		values.oppositedirection = 2;
+	else 
+		values.oppositedirection = 1;
+		
+	values.angle = list.pretest_angels.nextvalue;
+	if (values.angle == 2 || values.angle == 9) values.angleB = 1;
+	else if (values.angle == 3 || values.angle == 8) values.angleB = 2;
+	else if (values.angle == 4 || values.angle == 7) values.angleB = 3;
+	else if (values.angle == 5 || values.angle == 6) values.angleB = 4;
+	
+	values.sameness = list.pretest_sameness.nextvalue;
+]
+/stimulusframes = [1 = background, fixation]
+/trialduration = parameters.fixationduration
+/branch = [
+	if (values.sameness == 1) 
+		trial.pretest_same;
+	else 
+		trial.pretest_different;
+]
+/recorddata = false
+</trial>
+
+<trial pretest_same>
+/ inputdevice = keyboard
+/ontrialbegin = [values.countpretest_same += 1]
+/stimulusframes = [1 = base, comp_S, greenButton, redButton]
+/validresponse = (42, 54)
+/correctresponse = (54)
+/ontrialend = [
+	if (values.angle == 2 || values.angle == 9) {
+		values.pretesthits_22 += trial.pretest_same.correct; 
+		values.pretestmisses_22 += trial.pretest_same.error;
+	} else if (values.angle == 3 || values.angle == 8) {
+		values.pretesthits_67 += trial.pretest_same.correct; 
+		values.pretestmisses_67 += trial.pretest_same.error;
+	} else if (values.angle == 4 || values.angle == 7) {
+		values.pretesthits_112 += trial.pretest_same.correct; 
+		values.pretestmisses_112 += trial.pretest_same.error;
+	} else if (values.angle == 5 || values.angle == 6) {
+		values.pretesthits_157 += trial.pretest_same.correct; 
+		values.pretestmisses_157 += trial.pretest_same.error;
+	};
+
+	if (trial.pretest_same.correct){
+		if (values.angle == 2 || values.angle == 9){
+			values.sumrtpretesthits_22 += trial.pretest_same.latency;
+		} else if (values.angle == 3 || values.angle == 8){
+			values.sumrtpretesthits_67 += trial.pretest_same.latency;
+		} else if (values.angle == 4 || values.angle == 7){
+			values.sumrtpretesthits_112 += trial.pretest_same.latency;
+		} else if (values.angle == 5 || values.angle == 6){
+			values.sumrtpretesthits_157 += trial.pretest_same.latency;
+		};
+	};
+]
+</trial>
+
+<trial pretest_different>
+/ inputdevice = keyboard
+/ontrialbegin = [values.countpretest_different += 1]
+/stimulusframes = [1 = base, comp_d, greenButton, redButton]
+/validresponse = (42, 54)
+/correctresponse = (42)
+/ontrialend = [
+	if (values.angle == 2 || values.angle == 9) {
+		values.pretestCRs_22 += trial.pretest_different.correct; 
+		values.pretestFAs_22 += trial.pretest_different.error;
+	} else if (values.angle == 3 || values.angle == 8) {
+		values.pretestCRs_67 += trial.pretest_different.correct; 
+		values.pretestFAs_67 += trial.pretest_different.error;
+	} else if (values.angle == 4 || values.angle == 7) {
+		values.pretestCRs_112 += trial.pretest_different.correct; 
+		values.pretestFAs_112 += trial.pretest_different.error;
+	} else if (values.angle == 5 || values.angle == 6) {
+		values.pretestCRs_157 += trial.pretest_different.correct; 
+		values.pretestFAs_157 += trial.pretest_different.error;
+	};
+]
+</trial>
+
+***********************************************
+posttest
+***********************************************
+
+Note: trial selects
+* the next itemnumber
+* the assigned direction of that itemnumber
+* the angle of the comp stimulus
+* the sameness of the comp stimulus (same or different)
+* calls the appropriate trial
+
+<trial posttest_start>
+/ontrialbegin = [
+	values.animalnumber = list.posttest_animalnumbers.nextvalue;
+	values.direction = list.posttest_directions.nextvalue;
+	if (values.direction == 1) 
+		values.oppositedirection = 2 
+	else 
+		values.oppositedirection = 1;
+	values.angle = list.posttest_angels.nextvalue;
+	if (values.angle == 2 || values.angle == 9) values.angleB = 1;
+	else if (values.angle == 3 || values.angle == 8) values.angleB = 2;
+	else if (values.angle == 4 || values.angle == 7) values.angleB = 3;
+	else if (values.angle == 5 || values.angle == 6) values.angleB = 4;
+	values.sameness = list.posttest_sameness.nextvalue;
+]
+/stimulusframes = [1 = background, fixation]
+
+/trialduration = parameters.fixationduration
+/branch = [
+	if (values.sameness == 1) 
+		trial.posttest_same; 
+	else 
+		trial.posttest_different;
+]
+/recorddata = false
+</trial>
+
+<trial posttest_same>
+/ inputdevice = keyboard
+/ontrialbegin = [values.countposttest_same += 1]
+/stimulusframes = [1 = base, comp_S, greenButton, redButton]
+/validresponse = (42, 54)
+/correctresponse = (54)
+/ontrialend = [
+	if (values.angle == 2 || values.angle == 9) {
+		values.posttesthits_22 += trial.posttest_same.correct; 
+		values.posttestmisses_22 += trial.posttest_same.error;
+	} else if (values.angle == 3 || values.angle == 8) {
+		values.posttesthits_67 += trial.posttest_same.correct; 
+		values.posttestmisses_67 += trial.posttest_same.error;
+	} else if (values.angle == 4 || values.angle == 7) {
+		values.posttesthits_112 += trial.posttest_same.correct; 
+		values.posttestmisses_112 += trial.posttest_same.error;
+	} else if (values.angle == 5 || values.angle == 6) {
+		values.posttesthits_157 += trial.posttest_same.correct; 
+		values.posttestmisses_157 += trial.posttest_same.error;
+	};
+
+	if (trial.posttest_same.correct){
+		if (values.angle == 2 || values.angle == 9){
+			values.sumrtposttesthits_22 += trial.posttest_same.latency;
+		} else if (values.angle == 3 || values.angle == 8){
+			values.sumrtposttesthits_67 += trial.posttest_same.latency;
+		} else if (values.angle == 4 || values.angle == 7){
+			values.sumrtposttesthits_112 += trial.posttest_same.latency;
+		} else if (values.angle == 5 || values.angle == 6){
+			values.sumrtposttesthits_157 += trial.posttest_same.latency;
+		};
+	};
+]
+</trial>
+
+<trial posttest_different>
+/ inputdevice = keyboard
+/ontrialbegin = [values.countposttest_different += 1]
+/stimulusframes = [1 = base, comp_d,greenButton, redButton]
+/validresponse = (42, 54)
+/correctresponse = (42)
+/ontrialend = [
+	if (values.angle == 2 || values.angle == 9) {
+		values.posttestCRs_22 += trial.posttest_different.correct; 
+		values.posttestFAs_22 += trial.posttest_different.error;
+	} else if (values.angle == 3 || values.angle == 8) {
+		values.posttestCRs_67 += trial.posttest_different.correct; 
+		values.posttestFAs_67 += trial.posttest_different.error;
+	} else if (values.angle == 4 || values.angle == 7) {
+		values.posttestCRs_112 += trial.posttest_different.correct; 
+		values.posttestFAs_112 += trial.posttest_different.error;
+	} else if (values.angle == 5 || values.angle == 6) {
+		values.posttestCRs_157 += trial.posttest_different.correct; 
+		values.posttestFAs_157 += trial.posttest_different.error;
+	};
+]
+</trial>
+
+***********************************************
+training
+***********************************************
+
+Note: trial selects
+* the next itemnumber
+* the assigned direction of that itemnumber
+* the angle of the comp stimulus
+* the sameness of the comp stimulus (same or different)
+* calls the appropriate trial
+
+<trial training_start_keyboard>
+/ inputdevice = keyboard
+/ontrialbegin = [
+	values.animalnumber = list.training_animalnumbers.nextvalue;
+	values.direction = list.training_directions.nextvalue;
+	values.angle = list.training_angels.nextvalue;
+	if (values.angle == 2 || values.angle == 9) values.angleB = 1;
+	else if (values.angle == 3 || values.angle == 8) values.angleB = 2;
+	else if (values.angle == 4 || values.angle == 7) values.angleB = 3;
+	else if (values.angle == 5 || values.angle == 6) values.angleB = 4;
+	values.sameness = list.training_sameness.nextvalue;
+]
+/stimulusframes = [1 = background]
+/trialduration = parameters.fixationduration
+/recorddata = false
+/branch = [trial.rotation_keyboard]
+</trial>
+
+<trial rotation_keyboard>
+/ inputdevice = keyboard
+/stimulusframes = [1 = base, comp_S]
+/validresponse = (42, 54, 57)
+/ontrialend = [
+	if (trial.rotation_keyboard.response == 42) values.rotationdirection = 2;
+	else if (trial.rotation_keyboard.response == 54) values.rotationdirection = 1;
+	else if (trial.rotation_keyboard.response == 57) values.rotationdirection = 3;
+
+	if (values.rotationdirection == 1) values.angle += 1;
+	if (values.rotationdirection == 2) values.angle -= 1;
+	if (values.rotationdirection == 2 && values.angle == 0) values.angle = 9;
+	if (values.rotationdirection == 1 && values.angle == 10) values.angle = 1;
+]
+/branch = [
+	if (trial.rotation_keyboard.response != 57) trial.rotation_keyboard;
+	else if (values.angle != 1) trial.rotationfeedback;
+]
+</trial>
+
+Note: trial.rotationfeedback presents a frowny face if
+rbutton was pressed when comp and base pics were not the same 
+<trial rotationfeedback>
+/ontrialbegin = [
+	if (values.angle == 1) 
+		trial.rotationfeedback.insertstimulusframe(picture.posfeedback, 1);
+	else {
+		trial.rotationfeedback.insertstimulusframe(picture.negfeedback, 1); 
+		values.trainingerrors += 1;
+	};
+	text.traininginstructions3.textcolor = black;
+]
+/ontrialend = [trial.rotationfeedback.resetstimulusframes()]
+/stimulusframes = [1 = traininginstructions3]
+/timeout = 500
+/recorddata = false
+</trial>
+
+
+************************************************
+training demo
+************************************************
+
+<trial demo_start_keyboard>
+/ontrialbegin = [
+	values.animalnumber = 1;
+	values.direction = 1;
+	values.angle = list.demo_angles.nextvalue;
+	values.sameness = 1;
+]
+/stimulusframes = [1 = background]
+/trialduration = parameters.fixationduration
+/recorddata = true
+/branch = [trial.demo_keyboard]
+</trial>
+
+<trial demo_keyboard>
+/inputdevice = keyboard
+
+/ontrialbegin = [
+	if (values.angle == 1) 
+		text.traininginstructions3.textcolor = yellow;
+	else 
+		text.traininginstructions3.textcolor = black;
+]
+/stimulusframes = [1 = demobase, democomp, traininginstructions, traininginstructions2, traininginstructions3]
+/validresponse = (42, 54, 57)
+/ ontrialend = [
+	
+if (trial.demo_keyboard.response == 42) values.rotationdirection = 2;
+else if (trial.demo_keyboard.response == 54) values.rotationdirection = 1;
+else if (trial.demo_keyboard.response == 57) values.rotationdirection = 3;
+
+if (values.rotationdirection == 1) values.angle += 1;
+if (values.rotationdirection == 2) values.angle -= 1;
+if (values.rotationdirection == 2 && values.angle == 0) values.angle = 9;
+if (values.rotationdirection == 1 && values.angle == 10) values.angle = 1;
+]
+
+/branch = [if (trial.demo_keyboard.response != 57) {
+	trial.demo_keyboard;
+} else {
+	trial.rotationfeedback
+}
+]
+</trial>
+
+
+*******************************************************************************************************************
+*******************************************************************************************************************
+	BLOCKS
+*******************************************************************************************************************
+*******************************************************************************************************************
+
+Note: block.assignment assigns the 24 test stimuli to pretest, training and posttest
+<block assignment>
+/trials = [1 = assignitemnumbers]
+</block>
+
+<block pretestpractice>
+/screencolor = black
+/onblockbegin = [values.index = 0]
+/trials = [1-3 = instructions; 4-27 = practice_start]
+</block>
+
+<block pretest>
+/screencolor = black
+/onblockbegin = [values.index = 3]
+/trials = [1 = instructions; 2-97 = pretest_start]
+</block>
+
+<block trainingdemo>
+/screencolor = black
+/onblockbegin = [values.index = 4]
+/trials = [1 = instructions; 2 = demo_start_keyboard]
+</block>
+
+<block training>
+/screencolor = black
+/onblockbegin = [values.index = 5]
+/onblockbegin = [values.trainingerrors = 0]
+/trials = [1 = instructions; 2-193 = training_start_keyboard]
+</block>
+
+<block posttest>
+/screencolor = black
+/onblockbegin = [values.index = 6]
+/trials = [1-4 = instructions; 5-196 = posttest_start; 197 = instructions]
+</block>
+
+*******************************************************************************************************************
+*******************************************************************************************************************
+	EXPERIMENT
+*******************************************************************************************************************
+*******************************************************************************************************************
+<expt>
+/onexptend = [values.completed = 1]
+/blocks = [
+	1 = touchscreenInfo;
+	2 = assignment; 
+	3 = pretestpractice; 
+	4 = pretest; 
+	5 = trainingdemo; 
+	6 = training; 
+	7 = posttest;
+]
+</expt>
+
+*******************************************************************************************************************
+												End of File
+*******************************************************************************************************************
